@@ -1,7 +1,7 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit'
-import { addMonths } from 'date-fns'
+import { createSlice } from "@reduxjs/toolkit";
+import { addMonths } from "date-fns";
 
-const calendarSlice = createSlice({
+export const calendarSlice = createSlice({
   name: 'calendar',
   initialState: {
     activeDate: new Date()
@@ -18,8 +18,6 @@ const calendarSlice = createSlice({
 
 export const { nextMonth, previousMonth } = calendarSlice.actions
 
-const store = configureStore({
-  reducer: calendarSlice.reducer
-})
-
 export const selectActiveDate = (state) => state.calendar.activeDate
+
+export default calendarSlice.reducer
