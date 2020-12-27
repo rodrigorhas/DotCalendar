@@ -3,7 +3,7 @@ import moment from "moment";
 import { Text } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { selectActiveDate } from "./calendarSlice";
-import { isSameDay, isSameMonth } from "../../utils";
+import { isSameDay, isSameMonth } from "../../utils/date";
 
 const Day = (props) => {
   /**

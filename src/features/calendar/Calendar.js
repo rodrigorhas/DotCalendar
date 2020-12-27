@@ -3,37 +3,37 @@ import { Button, Text, View } from "react-native";
 import { connect, useSelector } from "react-redux";
 
 import { nextMonth, previousMonth, selectActiveDate } from "./calendarSlice";
+import { addDays, subDays } from "../../utils/date";
+import { capitalize } from "../../utils/string";
+
 import Day from "./Day";
 import Weekday from "./Weekday";
 
 const mapDispatchToProps = { nextMonth, previousMonth };
 
 const Calendar = (props) => {
-
   /**
    * @var {Moment} activeDate
    */
   const activeDate = useSelector(selectActiveDate);
 
-  console.log({activeDate})
-
   const generateMatrix = () => {
-    const firstDay = activeDate.clone().startOf('month');
-    let firstDayIndex = firstDay.weekday()
-    firstDayIndex = firstDayIndex === 6 ? -1 : firstDayIndex
+    const firstDay = activeDate.clone().startOf("month");
+    let firstDayIndex = firstDay.weekday();
+    firstDayIndex = firstDayIndex === 6 ? -1 : firstDayIndex;
 
     const matrix = [];
-    const matrixInitialDate = firstDay.subtract(firstDayIndex, 'days');
+    const matrixInitialDate = subDays(firstDay, firstDayIndex);
 
-    let counter = 0;
+    let currentDateIndex = 0;
     for (let row = 1; row < 7; row++) {
       matrix[row] = [];
       for (let col = 0; col < 7; col++) {
-        const iterationDate = matrixInitialDate.clone().add(counter, 'days');
-        const key = iterationDate.format("DD-MM-YYYY");
+        const currentDate = addDays(matrixInitialDate.clone(), currentDateIndex);
+        const key = currentDate.format("DD-MM-YYYY");
 
-        matrix[row][col] = <Day key={key} date={iterationDate} />;
-        counter++;
+        matrix[row][col] = <Day key={key} date={currentDate} />;
+        currentDateIndex++;
       }
     }
 
@@ -77,7 +77,7 @@ const Calendar = (props) => {
   };
 
   const createCalendarMainHeader = () => {
-    const title = activeDate.format("MMMM yyyy");
+    const title = capitalize(activeDate.format("MMMM yyyy"));
 
     return (
       <View style={{

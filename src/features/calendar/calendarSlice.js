@@ -1,17 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
+import { createSlice } from "@reduxjs/toolkit";
+import { addMonths, subMonths } from "../../utils/date";
 
 export const calendarSlice = createSlice({
   name: "calendar",
   initialState: {
-    activeDate: moment().subtract(1, 'month').valueOf(),
+    activeDate: moment().valueOf(),
   },
   reducers: {
     nextMonth: state => {
-      state.activeDate = moment(state.activeDate).add(1, 'month').valueOf()
+      state.activeDate = addMonths(moment(state.activeDate), 1).valueOf();
     },
     previousMonth: state => {
-      state.activeDate = moment(state.activeDate).subtract(1, 'month').valueOf()
+      state.activeDate = subMonths(moment(state.activeDate), 1).valueOf();
     },
   },
 });
