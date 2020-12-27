@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Text, View } from "react-native";
 import { connect, useSelector } from "react-redux";
-import { addDays, format, startOfMonth } from "date-fns";
 
 import { nextMonth, previousMonth, selectActiveDate } from "./calendarSlice";
 import Day from "./Day";
@@ -11,20 +10,28 @@ const mapDispatchToProps = { nextMonth, previousMonth };
 
 const Calendar = (props) => {
 
-  const activeDate = useSelector(selectActiveDate)
+  /**
+   * @var {Moment} activeDate
+   */
+  const activeDate = useSelector(selectActiveDate);
+
+  console.log({activeDate})
 
   const generateMatrix = () => {
-    const firstDay = startOfMonth(activeDate);
+    const firstDay = activeDate.clone().startOf('month');
+    let firstDayIndex = firstDay.weekday()
+    firstDayIndex = firstDayIndex === 6 ? -1 : firstDayIndex
 
     const matrix = [];
-    const matrixInitialDate = addDays(firstDay, -firstDay.getDay());
+    const matrixInitialDate = firstDay.subtract(firstDayIndex, 'days');
 
     let counter = 0;
     for (let row = 1; row < 7; row++) {
       matrix[row] = [];
       for (let col = 0; col < 7; col++) {
-        const iterationDate = addDays(matrixInitialDate, counter);
-        const key = format(iterationDate, "dd-MM-yyyy");
+        const iterationDate = matrixInitialDate.clone().add(counter, 'days');
+        const key = iterationDate.format("DD-MM-YYYY");
+
         matrix[row][col] = <Day key={key} date={iterationDate} />;
         counter++;
       }
@@ -69,26 +76,17 @@ const Calendar = (props) => {
     );
   };
 
-  const changeMonth = (dir) => {
-    console.log(dir)
-    if (dir) {
-      props.nextMonth(dir)
-    } else {
-      props.previousMonth(dir)
-    }
-  }
-
   const createCalendarMainHeader = () => {
-    const title = format(activeDate, "MMMM yyyy");
+    const title = activeDate.format("MMMM yyyy");
 
     return (
       <View style={{
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}>
-        <Button title="<" onPress={() => changeMonth(-1)} />
+        <Button title="<" onPress={() => props.previousMonth()} />
         <Text
           style={{
             padding: 16,
@@ -98,7 +96,7 @@ const Calendar = (props) => {
           }}>
           {title}
         </Text>
-        <Button title=">" onPress={() => changeMonth(+1)} />
+        <Button title=">" onPress={() => props.nextMonth()} />
       </View>
     );
   };

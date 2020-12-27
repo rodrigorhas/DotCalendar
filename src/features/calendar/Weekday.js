@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { addDays, format, startOfWeek } from "date-fns";
-import { default as ptBrLocale } from "date-fns/locale/pt-BR";
 import { Text } from "react-native";
+import moment from "moment";
 
 const Weekday = (props) => {
-  const name = format(addDays(startOfWeek(new Date()), props.dayIndex), "iiii", { locale: ptBrLocale });
+  const name = moment.weekdaysShort()[props.dayIndex];
   const shortName = name[0].toUpperCase();
 
   const [state] = useState({
     name,
-    shortName
+    shortName,
   });
 
   return (

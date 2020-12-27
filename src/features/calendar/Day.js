@@ -1,44 +1,47 @@
 import React from "react";
+import moment from "moment";
 import { Text } from "react-native";
-import { isSameDay, isSameMonth } from "date-fns";
-import { connect } from "react-redux";
-
-const mapStateToProps = (state) => ({activeDate: state.calendar.activeDate})
+import { connect, useSelector } from "react-redux";
+import { selectActiveDate } from "./calendarSlice";
+import { isSameDay, isSameMonth } from "../../utils";
 
 const Day = (props) => {
-  const calendarActiveDate = props.activeDate
+  /**
+   * @var {Moment} calendarActiveDate
+   */
+  const calendarActiveDate = useSelector(selectActiveDate);
 
   const getStyles = () => {
-    const now = new Date();
+    const now = moment();
     const isCurrentMonthDate = isSameMonth(calendarActiveDate, props.date);
 
     const color = isCurrentMonthDate ? "rgba(33, 33, 33, 1)" : "rgba(33, 33, 33, 0.5)";
-    const isToday = isSameDay(props.date, now)
+    const isToday = isSameDay(props.date, now);
 
     const todayStyle = {
-      color: isToday ? 'cornflowerblue' : color,
-      fontWeight: isToday ? "bold" : undefined
-    }
+      color: isToday ? "cornflowerblue" : color,
+      fontWeight: isToday ? "bold" : undefined,
+    };
 
     const styles = {
       flex: 1,
       backgroundColor: "white",
       textAlign: "center",
       paddingVertical: 12,
-    }
+    };
 
     return {
       ...styles,
-      ...todayStyle
+      ...todayStyle,
     };
-  }
+  };
 
   return (
     <Text
       style={getStyles()}>
-      {props.date.getDate()}
+      {props.date.format('DD')}
     </Text>
   );
-}
+};
 
-export default connect(mapStateToProps)(Day)
+export default connect()(Day);
