@@ -23,16 +23,20 @@ const Calendar = (props) => {
     const matrix = [];
     const matrixInitialDate = firstDayIndex > 0 && firstDayIndex < 6 ? subDays(firstDay, firstDayIndex) : firstDay;
 
-    let currentDateIndex = 0
+    let currentDateIndex = 0;
     for (let row = 1; row < 7; row++) {
       matrix[row] = [];
       for (let col = 0; col < 7; col++) {
         const currentDate = addDays(matrixInitialDate.clone().utc(), currentDateIndex);
         const key = currentDate.format("DD-MM-YYYY");
 
-        const tempHasEvents = ((col * row) + 2) % 4; // random
-
-        matrix[row][col] = <Day key={key} date={currentDate} hasEvents={tempHasEvents}/>;
+        matrix[row][col] = (
+          <Day
+            key={key}
+            date={currentDate}
+            hasEvents={false}
+          />
+        );
         currentDateIndex++;
       }
     }
@@ -76,24 +80,8 @@ const Calendar = (props) => {
     );
   };
 
-  const createCalendarMainHeader = () => {
-    return (
-      <View style={{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-      }}>
-
-        {/*<Button title="<" onPress={() => props.previousMonth()} />*/}
-        {/*<Button title=">" onPress={() => props.nextMonth()} />*/}
-      </View>
-    );
-  };
-
   return (
     <View>
-      {createCalendarMainHeader()}
       {createWeekdaysHeader()}
       {createCalendarRows()}
     </View>

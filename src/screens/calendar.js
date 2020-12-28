@@ -12,24 +12,24 @@ import { styles } from "../styles";
 import { isSameYear } from "../utils/date";
 import { capitalize } from "../utils/string";
 
-const CalendarHeaderRight = (props) => () => (
+const CalendarHeaderRight = (props) => (
   <View style={{
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around'
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   }}>
     <IconButton icon="chevron-left" onPress={() => props.previousMonth()} />
     <IconButton icon="calendar" onPress={() => props.today()} />
     <IconButton icon="chevron-right" onPress={() => props.nextMonth()} />
   </View>
-)
+);
 
 const CalendarScreen = (props) => {
 
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
-      headerRight: CalendarHeaderRight(props),
+      headerRight: () => <CalendarHeaderRight {...props} />,
     });
   }, [props.navigation]);
 
@@ -54,7 +54,7 @@ CalendarScreen.navigationOptions = () => {
 };
 
 const mapDispatchToProps = {
-  previousMonth, nextMonth, today
-}
+  previousMonth, nextMonth, today,
+};
 
 export default connect(null, mapDispatchToProps)(CalendarScreen);

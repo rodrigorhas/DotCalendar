@@ -1,8 +1,12 @@
 import React from "react";
 import moment from "moment";
-import { Text, View } from "react-native";
+
+import { Pressable, Text, View } from "react-native";
 import { connect, useSelector } from "react-redux";
-import { selectActiveDate } from "./calendarSlice";
+import { useNavigation } from "@react-navigation/native";
+
+import { selectActiveDate, selectHasEventsForDate } from "./calendarSlice";
+
 import { isSameDay, isSameMonth } from "../../utils/date";
 import { colors } from "../../styles/colors";
 
@@ -33,7 +37,7 @@ const DayContent = (props) => {
     ...styles.dayTextBase,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 16,
   };
 
   const todayTextStyle = {
@@ -44,7 +48,7 @@ const DayContent = (props) => {
     paddingHorizontal: 4,
     borderRadius: 100,
     fontSize: 12,
-  }
+  };
 
   const today = (
     <View style={todayContainerStyle}>
@@ -58,7 +62,7 @@ const DayContent = (props) => {
     <Text
       style={{
         ...styles.dayTextBase,
-        paddingVertical: 12,
+        paddingVertical: 18,
         color: isCurrentMonthDate ? "rgba(33, 33, 33, 1)" : "rgba(33, 33, 33, 0.5)",
       }}>
       {props.date.format("D")}
@@ -68,7 +72,7 @@ const DayContent = (props) => {
   return isToday ? today : common;
 };
 
-const BottomDot = (props) => {
+const BottomLine = (props) => {
   return (
     <View style={{
       flex: 1,
@@ -86,11 +90,17 @@ const BottomDot = (props) => {
 };
 
 const Day = (props) => {
+  const events = useSelector(selectHasEventsForDate(props.date))
+  const hasEvents = events.length;
+
+  const navigation = useNavigation();
+  const onPress = () => navigation.navigate('index-appointment', {date: props.date.valueOf()})
+
   return (
-    <View style={styles.dayContainer}>
+    <Pressable style={styles.dayContainer} onPress={onPress}>
       <DayContent date={props.date} />
-      <BottomDot active={props.hasEvents} />
-    </View>
+      <BottomLine active={hasEvents} />
+    </Pressable>
   );
 };
 

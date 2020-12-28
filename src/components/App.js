@@ -14,6 +14,7 @@ import { Provider as StoreProvider } from "react-redux";
 import { store } from "../reducers";
 
 import CalendarScreen from "../screens/calendar";
+import IndexAppointmentScreen from "../screens/indexAppointment";
 
 moment.locale("pt-br");
 
@@ -31,7 +32,11 @@ const App: () => React$Node = () => {
               component={CalendarScreen}
               options={CalendarScreen.navigationOptions}
             />
-            {/*<Stack.Screen name="Profile" component={ProfileScreen} />*/}
+            <Stack.Screen
+              name="index-appointment"
+              component={IndexAppointmentScreen}
+              options={IndexAppointmentScreen.navigationOptions}
+            />
           </Stack.Navigator>
         </PaperProvider>
       </StoreProvider>
