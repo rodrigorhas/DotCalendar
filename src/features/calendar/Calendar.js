@@ -1,10 +1,9 @@
 import React from "react";
-import { Button, Text, View } from "react-native";
+import { View } from "react-native";
 import { connect, useSelector } from "react-redux";
 
 import { nextMonth, previousMonth, selectActiveDate } from "./calendarSlice";
 import { addDays, subDays } from "../../utils/date";
-import { capitalize } from "../../utils/string";
 
 import Day from "./Day";
 import Weekday from "./Weekday";
@@ -19,20 +18,21 @@ const Calendar = (props) => {
 
   const generateMatrix = () => {
     const firstDay = activeDate.clone().startOf("month");
-    let firstDayIndex = firstDay.weekday();
-    firstDayIndex = firstDayIndex === 6 ? -1 : firstDayIndex;
+    const firstDayIndex = firstDay.weekday();
 
     const matrix = [];
-    const matrixInitialDate = subDays(firstDay, firstDayIndex);
+    const matrixInitialDate = firstDayIndex > 0 && firstDayIndex < 6 ? subDays(firstDay, firstDayIndex) : firstDay;
 
-    let currentDateIndex = 0;
+    let currentDateIndex = 0
     for (let row = 1; row < 7; row++) {
       matrix[row] = [];
       for (let col = 0; col < 7; col++) {
-        const currentDate = addDays(matrixInitialDate.clone(), currentDateIndex);
+        const currentDate = addDays(matrixInitialDate.clone().utc(), currentDateIndex);
         const key = currentDate.format("DD-MM-YYYY");
 
-        matrix[row][col] = <Day key={key} date={currentDate} />;
+        const tempHasEvents = ((col * row) + 2) % 4; // random
+
+        matrix[row][col] = <Day key={key} date={currentDate} hasEvents={tempHasEvents}/>;
         currentDateIndex++;
       }
     }
@@ -77,26 +77,16 @@ const Calendar = (props) => {
   };
 
   const createCalendarMainHeader = () => {
-    const title = capitalize(activeDate.format("MMMM yyyy"));
-
     return (
       <View style={{
         flex: 1,
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "space-around",
         alignItems: "center",
       }}>
-        <Button title="<" onPress={() => props.previousMonth()} />
-        <Text
-          style={{
-            padding: 16,
-            fontWeight: "bold",
-            fontSize: 18,
-            textAlign: "center",
-          }}>
-          {title}
-        </Text>
-        <Button title=">" onPress={() => props.nextMonth()} />
+
+        {/*<Button title="<" onPress={() => props.previousMonth()} />*/}
+        {/*<Button title=">" onPress={() => props.nextMonth()} />*/}
       </View>
     );
   };

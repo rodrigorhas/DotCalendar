@@ -3,6 +3,13 @@
  * @param {Moment} b
  * @returns {boolean}
  */
+export const isSameYear = (a, b) => a.format('YYYY') === b.format('YYYY')
+
+/**
+ * @param {Moment} a
+ * @param {Moment} b
+ * @returns {boolean}
+ */
 export const isSameMonth = (a, b) => a.format('MM-YYYY') === b.format('MM-YYYY')
 
 /**

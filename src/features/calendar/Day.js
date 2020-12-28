@@ -1,9 +1,40 @@
 import React from "react";
 import moment from "moment";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { selectActiveDate } from "./calendarSlice";
 import { isSameDay, isSameMonth } from "../../utils/date";
+import { colors } from "../../styles/colors";
+
+const styles = {
+  dayContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  dayText: {
+    flex: 1,
+    backgroundColor: "white",
+    textAlign: "center",
+    paddingVertical: 12,
+  }
+}
+
+const BottomDot = (props) => {
+  return (
+    <View style={{
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center'
+    }}>
+      <View style={{
+        width: '100%',
+        borderBottomWidth: 2,
+        borderBottomStyle: 'solid',
+        borderBottomColor: props.active ? colors.primary : colors.lighter,
+      }}/>
+    </View>
+  )
+}
 
 const Day = (props) => {
   /**
@@ -23,24 +54,20 @@ const Day = (props) => {
       fontWeight: isToday ? "bold" : undefined,
     };
 
-    const styles = {
-      flex: 1,
-      backgroundColor: "white",
-      textAlign: "center",
-      paddingVertical: 12,
-    };
-
     return {
-      ...styles,
+      ...styles.dayText,
       ...todayStyle,
     };
   };
 
   return (
-    <Text
-      style={getStyles()}>
-      {props.date.format('DD')}
-    </Text>
+    <View style={styles.dayContainer}>
+      <Text
+        style={getStyles()}>
+        {props.date.format('DD')}
+      </Text>
+      <BottomDot active={props.hasEvents}/>
+    </View>
   );
 };
 

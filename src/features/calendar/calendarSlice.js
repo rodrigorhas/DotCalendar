@@ -14,10 +14,13 @@ export const calendarSlice = createSlice({
     previousMonth: state => {
       state.activeDate = subMonths(moment(state.activeDate), 1).valueOf();
     },
+    today: state => {
+      state.activeDate = moment().valueOf()
+    },
   },
 });
 
-export const { nextMonth, previousMonth } = calendarSlice.actions;
+export const { nextMonth, previousMonth, today } = calendarSlice.actions;
 
 export const selectActiveDate = (state) => moment(state.calendar.activeDate);
 
